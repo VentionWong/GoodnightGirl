@@ -58,7 +58,7 @@
 		type: 'transparent', //透明渐变样式
 		autoBackButton: true, //自动绘制返回箭头
 		splitLine: { //底部分割线
-			color: '#cccccc'
+			color: '#fff'
 		}
 	}
 
@@ -85,7 +85,7 @@
 					if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
 						data.lastId = lastId;
 						data.time = new Date().getTime() + "";
-						console.log("have lastID= "+data.lastId);
+						mui.toast("刷新完毕");
 					}
 					
 
@@ -96,9 +96,6 @@
 							lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
 							//news.items = news.items.concat(convert(rsp));
 							news.items = convert(rsp).concat(news.items);
-							
-							var listsss = document.getElementById("list").getElementsByClassName("mui-card").length;
-							console.log("new list"+lastId+"liNUM:"+listsss);
 						}
 					});
 				}

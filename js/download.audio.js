@@ -19,6 +19,8 @@
                 //如果文件不存在,联网下载图片
                 setImgFromNet (imgId,loadUrl,relativePath);
             });
+            //触发submit按钮的点击事件
+			mui.trigger(myplayer,'tap');
         }
 
     /*给图片标签<img>设置本地图片
@@ -37,15 +39,13 @@
             //给<img>设置图片
             sd_path = "startPlay('"+relativePath+"');";
             $id(imgId).setAttribute("onclick", sd_path);
-            document.getElementById("loadingAudio").innerHTML = "";
-            
         }
 
     /*联网下载图片,并设置给<img>*/
     function setImgFromNet (imgId,loadUrl,relativePath) {
         //先设置下载中的默认图片
         //$id(imgId).setAttribute("src", "../../images/logo.png");
-        document.getElementById("loadingAudio").innerHTML = "<img src='../../images/arecord.png' />";
+        mui.toast("下载音频中...");
         //创建下载任务
         var dtask = plus.downloader.createDownload(loadUrl, {}, function(d, status) {
             if (status == 200) {

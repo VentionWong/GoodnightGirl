@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="../css/mui.min.css" rel="stylesheet" />
+<link href="../css/style.css" rel="stylesheet"/>
+<script type="text/javascript" src="../js/common.js"></script>
+</head>
+
+<body>
+<div class="mui-content">
+	<h5>侍寝时间</h5>
+	<div id="sleepTime">
+		<span id="sleepTimeHour">23</span>
+		:
+		<span id="sleepTimeMin">00</span>
+	</div>
+	<br />
+	<h5>我的后宫</h5>
+    <ul class="mui-table-view mui-table-view-radio">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" onclick="pickTime()">小MM<span id="output"></span></a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">Item 2</a>
+        </li>
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right" onclick="createLocalPushMsg();">Item 3</a>
+        </li>
+    </ul>
+    
+</div>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+	mui.init()
+	
+	mui.plusReady(function() {
+		
+
+	});
+	
+	function pickTime() {
+		//outSet( "打开系统时间选择框：");
+		var dTime=new Date();
+		dTime.setHours(23,0);
+		//outLine( "[time] "+dTime );
+		plus.nativeUI.pickTime(function(e){
+			var d=e.date;
+			console.log(d);
+			//outLine( "每天"+d.getHours()+":"+d.getMinutes()+"喊您睡觉" );
+			document.getElementById('sleepTimeHour').innerHTML = d.getHours();
+			document.getElementById('sleepTimeMin').innerHTML = d.getMinutes();
+			document.getElementById('output').innerHTML = "每天"+d.getHours()+":"+d.getMinutes()+"喊您睡觉";
+		},function (e){
+			//outSet( "取消选择时间！" );
+		},{title:"请选择侍寝时间",is24Hour:true,time:dTime});
+	}
+	
+	/**
+	 * 本地创建一条推动消息
+	 */
+	function createLocalPushMsg(){
+		var options = {cover:false};
+		var str = dateToStr(new Date());
+		str += ": 欢迎使用HTML5+创建本地消息！";
+		plus.push.createMessage( str, "LocalMSG", options );
+		//outSet( "创建本地消息成功！" );
+		//outLine( "请到系统消息中心查看！" );
+		if(plus.os.name=="iOS"){
+			mui.toast('*如果无法创建消息，请到"设置"->"通知"中配置应用在通知中心显示!');
+		}
+	}
+	
+	function whenToPush(){
+		var sleepTimeHour = document.getElementById('sleepTimeHour').innerHTML;
+		var sleepTimeMin = document.getElementById('sleepTimeMin').innerHTML;
+		var nowTime = new Date();
+		if (nowTime.getHours() == sleepTimeHour && nowTime.getMinutes() == sleepTimeMin){
+			createLocalPushMsg();
+			console.log('~~~~1~');
+		}else{
+			console.log('~~~~2~');
+		}
+	}
+	
+	
+//	plus.geolocation.watchPosition( function ( p ) {
+//      //console.log( "监听位置变化信息:" );
+//      //console.log( JSON.stringify(p) );
+//      whenToPush();
+//  }, function ( e ) {
+//      //console.log( "监听位置变化信息失败："+e.message );
+//  }, {} );
+	
+	document.addEventListener('pause', function(){//resume pause
+		//setInterval(whenToPush(),1000);
+		//setInterval(plus.geolocation.getCurrentPosition(),30000)
+		plus.geolocation.watchPosition( function ( p ) {
+	        //console.log( "监听位置变化信息:" );
+	        //console.log( JSON.stringify(p) );
+	        whenToPush();
+	    }, function ( e ) {
+	        //console.log( "监听位置变化信息失败："+e.message );
+	    }, {} );
+	});
+	
+	
+</script>
+<script type="text/javascript" src="../js/immersed.js" ></script>
+</body>
+
+</html>

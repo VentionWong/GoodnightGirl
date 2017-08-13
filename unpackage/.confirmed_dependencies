@@ -1,0 +1,81 @@
+{
+  "html/setting.html": {
+    "href": "html/setting.html",
+    "resources": [
+      "js/mui.min.js",
+      "js/mui.view.js",
+      "js/feedback.js",
+      "images/logo.png",
+      "css/mui.min.css",
+      "css/feedback.css"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "html/sub/detail.html": {
+    "href": "html/sub/detail.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/list-to-detail.css",
+      "js/mui.min.js",
+      "js/vue.min.js",
+      "js/common.js",
+      "js/immersed.js",
+      "css/common.css",
+      "images/astop.png",
+      "audio/friendship.mp3"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "html/home.html": {
+    "href": "html/home.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/style.css",
+      "js/mui.min.js",
+      "js/vue.min.js"
+    ],
+    "refer": [
+      "html/sub/detail.html"
+    ],
+    "priority": 0
+  },
+  "html/user.html": {
+    "href": "html/user.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/style.css",
+      "js/common.js",
+      "js/mui.min.js",
+      "js/immersed.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "html/sleep.html": {
+    "href": "html/sleep.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/style.css",
+      "js/mui.min.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/style.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "html/setting.html",
+      "html/home.html",
+      "html/user.html",
+      "html/sleep.html"
+    ],
+    "priority": 0
+  }
+}

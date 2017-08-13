@@ -1,0 +1,26 @@
+.mui-bar-nav {
+	background-color: #fff;
+}
+.mui-bar-tab {
+	border-top: 1px;
+}
+
+.mui-content {
+	padding-bottom: 51px;
+}
+.mui-card-content {
+	line-height: 0;
+}
+.mui-card-content img {
+	width: 100%;
+}
+.mui-card {
+}
+.mui-card .mui-badge {
+    border-radius: 3px;
+}
+.mui-card .playaudio {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}

@@ -79,22 +79,26 @@
 					}
 
 					var data = {
-						column: "mid,name,up_uname,cover_url,update_time,listen_url" //需要的字段名
+						column: "id,name,up_uname,cover_url,update_time,listen_url" //需要的字段名
 					}
 
 					if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
 						data.lastId = lastId;
 						data.time = new Date().getTime() + "";
+						console.log("have lastID= "+data.lastId);
 					}
-
 					
 
-					//请求列表信息流
-					mui.getJSON("http://www.zlhpy.com/musicapi.php", data, function(rsp) {
+					//请求列表信息流,要在PHP进行判断data传过去的lastID
+					mui.getJSON("http://www.zlhpy.com/musicapi.php?", data, function(rsp) {
 						mui('#list').pullRefresh().endPulldown();
 						if(rsp && rsp.length > 0) {
 							lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
-							news.items = news.items.concat(convert(rsp));
+							//news.items = news.items.concat(convert(rsp));
+							news.items = convert(rsp).concat(news.items);
+							
+							var listsss = document.getElementById("list").getElementsByClassName("mui-card").length;
+							console.log("new list"+lastId+"liNUM:"+listsss);
 						}
 					});
 				}
@@ -192,7 +196,6 @@
 			
 			var time = formatDateTime(item.update_time);
 			var listen_url = "http://www.zlhpy.com"+item.listen_url;
-			console.log(listen_url);
 			var cover = item.cover_url;
 			if (cover){
 				cover = "http://www.zlhpy.com"+item.cover_url;
@@ -201,7 +204,7 @@
 			}
 			
 			newItems.push({
-				guid: item.mid,
+				guid: item.id,
 				title: item.name,
 				author: item.up_uname,
 				cover: cover,

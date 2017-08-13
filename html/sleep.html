@@ -76,9 +76,14 @@
 						mui('#list').pullRefresh().endPulldown();
 						if(rsp && rsp.length > 0) {
 							lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
-							news.items = news.items.concat(convert(rsp));
+							//news.items = news.items.concat(convert(rsp));
+							news.items = convert(rsp).concat(news.items);
+							
 						}
 					});
+					
+							var listsss = document.getElementById("list").getElementsByClassName("mui-media").length;
+							console.log("new list"+lastId+"liNUM:"+listsss);
 				}
 			}
 		}

@@ -44,20 +44,35 @@
 	display: block;
 	position: fixed;
 	width: 100%;
-	height: 44px;
+	height: 60px;
 	bottom: 0;
 }
 #stop {
 	display: none;
 }
-#stop,#showImg,.mui-btn {
+#stop,#play {
 	width: 50px;
 	margin: 0 auto;
 }
+.icon-play {
+	display: block;
+	width: 48px;
+	height:48px;
+	color: #FFF;
+	background: url(../../images/icon/play.svg);
+}
+.icon-pause {
+	display: block;
+	width: 48px;
+	height:48px;
+	color: #FFF;
+	background: url(../../images/icon/pause.svg);
+}
 </style>
+
 <div id="player">
-	<div id="showImg"></div>
-	<div id="stop" class="stop mui-btn" onclick="stopPlay();">停止</div>
+	<div id="play" onclick="startPlay();"><span class="icon-play"></span></div>
+	<div id="stop" onclick="stopPlay();"><span class="icon-pause"></span></div>
 </div>
 
 <script src="../../js/mui.min.js"></script>
@@ -69,7 +84,7 @@
 	document.addEventListener( "plusready", onPlusReady, false );
 	// 扩展API加载完毕，现在可以正常调用扩展API 
 	
-		var myplayer = document.getElementById("showImg");
+		var myplayer = document.getElementById("play");
 	function onPlusReady() {
 		
 //		mui('#audioList').on('click', 'li', function(){
@@ -78,15 +93,8 @@
 		
 		//监听点击事件
 		myplayer.addEventListener("tap",function () {
-			console.log("tap event trigger");
-			var loadUrl = vm.listen_url;
-			var filename = loadUrl.substring(loadUrl.lastIndexOf("/") + 1, loadUrl.length);
-            var relativePath = "_downloads/" + filename;
-			startPlay(relativePath);
+			startPlay();
 		});
-            
-		
-		
 		
 	}
 	
@@ -127,8 +135,6 @@
 		vm.author = event.detail.author;
 		vm.time = event.detail.time;
 		vm.listen_url = event.detail.listen_url;
-		
-		document.getElementById("showImg").innerHTML = "<div id='"+guid+"' class='mui-btn'>播放</div>";
 		setImg(guid, vm.listen_url);
 		
 		//向服务端请求文章详情内容
@@ -174,20 +180,32 @@ var ep=null;
 document.addEventListener('DOMContentLoaded', function(){
 	// 获取DOM元素对象
 	ep = document.getElementById('stop');
-	startplay = document.getElementById('showImg');
+	startplay = document.getElementById('play');
 	//updateHistory();
 },false);
 
 
 
 // 开始播放
-function startPlay(url){
-	//ep = document.getElementById('play');
+function startPlay(){
+	if(p){
+		stopPlay();
+	}
+	var loadUrl = vm.listen_url;
+	var filename = loadUrl.substring(loadUrl.lastIndexOf("/") + 1, loadUrl.length);
+    var relativePath = "_downloads/" + filename;
+	var sd_path = plus.io.convertLocalFileSystemURL(relativePath);
+	var playUrl = "";
+            if(plus.os.name=="iOS"){
+		        playUrl = relativePath;
+		    }else{
+		    		playUrl = sd_path;
+		    }
 	ep.style.display = 'block';
 	startplay.style.display = 'none';
-	mui("#demo1").progressbar({progress:0}).show();
+	//mui("#demo1").progressbar({progress:0}).show();
 
-	p = plus.audio.createPlayer(url);
+	p = plus.audio.createPlayer(playUrl);
 	p.play(function(){
 		// 播放完成
 		stopPlay();
@@ -195,20 +213,27 @@ function startPlay(url){
 		//outLine('播放音频文件"'+url+'"失败：'+e.message);
 	});
 	// 获取总时长
-	var d = p.getDuration();
-	
-	pi = setInterval(function(){
-		var c = p.getPosition();
-		var pct = Math.round(c/d*100,2);
-		mui("#demo1").progressbar().setProgress(pct);
-	}, 1000);
+//	var d = p.getDuration();
+//	
+//	pi = setInterval(function(){
+//		if(!d){ // 兼容无法及时获取总时长的情况
+//			d = p.getDuration();
+//		}
+//		var c = p.getPosition();
+//		if(!c){  // 兼容无法及时获取当前播放位置的情况
+//			return;
+//		}
+//		var pct = Math.round(c/d*100,2);
+//		mui("#demo1").progressbar().setProgress(pct);
+//	}, 1000);
 }
 // 停止播放
 function stopPlay(){
-	clearInterval(pi);
-	mui("#demo1").progressbar().setProgress(100);
-	mui("#demo1").progressbar().hide();
-	setTimeout(resetPlay, 500);
+	//clearInterval(pi);
+	//mui("#demo1").progressbar().setProgress(100);
+	//mui("#demo1").progressbar().hide();
+	//setTimeout(resetPlay, 500);
+	resetPlay();
 	// 操作播放对象
 	if(p){
 		p.stop();

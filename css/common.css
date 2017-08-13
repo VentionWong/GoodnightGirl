@@ -30,7 +30,7 @@ header {
 	font-size: 17px;
 	text-align: center;
 	line-height: 44px;
-	background: #D74B28;
+	background:#FFF;
 	/*background: -webkit-linear-gradient(top,rgba(215,75,40,1),rgba(215,75,40,0.8));*/
 	z-index: 9999;
 	/*border-bottom: 1px solid rgba(215,75,40,0.8);*/
@@ -130,6 +130,11 @@ header {
 	background-color: #ebebeb;
 	border-color: #e0e0e0;
 }
+.button-success {
+	color: #FFF;
+	background-color: #4cd964;
+	border-color: #2AC845;
+}
 .button-select {
 	font-size: 14px;
 	background-color: #CCCCCC;
@@ -181,7 +186,7 @@ header {
 	padding: 8px 16px;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	border-top: 2px solid #AAA;
+	border-top: 1px solid #ccc;
 	-webkit-overflow-scrolling: touch;
 }
 .iback {

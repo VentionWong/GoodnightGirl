@@ -12,14 +12,16 @@
             //检查音频是否已存在
             plus.io.resolveLocalFileSystemURL(relativePath, function(entry) {
                 console.log("音频存在,直接设置=" + relativePath);
-                
+                //触发submit按钮的点击事件
+				mui.trigger(myplayer,'tap');
+                ep.style.display = 'block';
+				startplay.style.display = 'none';
             }, function(e) {
                 console.log("音频不存在,联网下载=" + relativePath);
                 //如果文件不存在,联网下载音频
                 setImgFromNet (imgId,loadUrl,relativePath);
             });
-            //触发submit按钮的点击事件
-			mui.trigger(myplayer,'tap');
+            
         }
 
     
@@ -34,6 +36,10 @@
             if (status == 200) {
                 //下载成功
                 console.log("下载成功=" + relativePath);
+                //触发submit按钮的点击事件
+				mui.trigger(myplayer,'tap');
+				ep.style.display = 'block';
+				startplay.style.display = 'none';
             } else {
                 //下载失败,需删除本地临时文件,否则下次进来时会检查到音频已存在
                 console.log("下载失败=" + status+"=="+relativePath);

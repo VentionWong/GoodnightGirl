@@ -11,9 +11,7 @@
 
 <body>
 <div class="mui-content">
-	<div id="demo1" class="mui-progressbar">
-		<span></span>
-	</div>
+	
 	<!--顶部banner图 开始-->
 	<div id="kr-article-banner" class="kr-article-banner">
 		<div id="kr-article-cover" class="kr-article-cover">
@@ -47,6 +45,9 @@
 	height: 60px;
 	bottom: 0;
 }
+#myplayer {
+	display: none;
+}
 #stop {
 	display: none;
 }
@@ -74,17 +75,37 @@
 	<div id="play" onclick="startPlay();"><span class="icon-play"></span></div>
 	<div id="stop" onclick="stopPlay();"><span class="icon-pause"></span></div>
 </div>
+<div id="myplayer" onclick="startPlay();"></div>
 
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 	mui.init();
 
+	//测试用，删除缓存音频start
+//	var gentry=null
+//	plus.io.resolveLocalFileSystemURL('_downloads/', function(entry){
+//		entry.getDirectory('', {create:true}, function(dir){
+//			gentry = dir;
+//			gentry.removeRecursively(function(){
+//				// Success
+//				console.log('操作成功！');
+//			}, function(e){
+//				console.log('操作失败：'+e.message);
+//			});
+//		}, function(e){
+//			console.log('Get directory "audio" failed: '+e.message);
+//		});
+//	}, function(e){
+//		console.log('Resolve "_downloads/" failed: '+e.message);
+//	} );
+	//测试用，删除缓存音频end
+	
 	// 扩展API加载完毕后调用onPlusReady回调函数 
 	document.addEventListener( "plusready", onPlusReady, false );
 	// 扩展API加载完毕，现在可以正常调用扩展API 
 	
-		var myplayer = document.getElementById("play");
+	var myplayer = document.getElementById("myplayer");
 	function onPlusReady() {
 		
 //		mui('#audioList').on('click', 'li', function(){
@@ -93,6 +114,7 @@
 		
 		//监听点击事件
 		myplayer.addEventListener("tap",function () {
+			stopPlay();
 			startPlay();
 		});
 		
@@ -196,22 +218,33 @@ function startPlay(){
     var relativePath = "_downloads/" + filename;
 	var sd_path = plus.io.convertLocalFileSystemURL(relativePath);
 	var playUrl = "";
-            if(plus.os.name=="iOS"){
-		        playUrl = relativePath;
-		    }else{
-		    		playUrl = sd_path;
-		    }
-	ep.style.display = 'block';
-	startplay.style.display = 'none';
-	//mui("#demo1").progressbar({progress:0}).show();
-
-	p = plus.audio.createPlayer(playUrl);
-	p.play(function(){
-		// 播放完成
-		stopPlay();
-	}, function(e){
-		//outLine('播放音频文件"'+url+'"失败：'+e.message);
-	});
+    if(plus.os.name=="iOS"){
+        playUrl = relativePath;
+    }else{
+    	playUrl = sd_path;
+    }
+    
+    
+    //检查音频是否已存在
+    plus.io.resolveLocalFileSystemURL(relativePath, function(entry) {
+        console.log("startplay检查音频存在,直接设置=" + relativePath);
+        ep.style.display = 'block';
+		startplay.style.display = 'none';
+		//mui("#demo1").progressbar({progress:0}).show();
+	
+		p = plus.audio.createPlayer(playUrl);
+		p.play(function(){
+			// 播放完成
+			stopPlay();
+		}, function(e){
+			//outLine('播放音频文件"'+url+'"失败：'+e.message);
+		});
+    }, function(e) {
+        console.log("startplay音频下载中=" + relativePath);
+        //如果文件不存在,联网下载音频
+        
+    });
+    
 	// 获取总时长
 //	var d = p.getDuration();
 //	
@@ -233,6 +266,7 @@ function stopPlay(){
 	//mui("#demo1").progressbar().setProgress(100);
 	//mui("#demo1").progressbar().hide();
 	//setTimeout(resetPlay, 500);
+		console.log('19191919');
 	resetPlay();
 	// 操作播放对象
 	if(p){

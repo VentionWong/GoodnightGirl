@@ -7,34 +7,133 @@
 <link href="../../css/mui.min.css" rel="stylesheet" />
 <link href="../../css/list-to-detail.css" rel="stylesheet" />
 <link href="../../css/style.css" rel="stylesheet" />
+<style type="text/css">
+	
+	.mui-zoom-scroller {
+		position: absolute;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		-webkit-backface-visibility: hidden;
+	}
+	.mui-zoom {
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+	.mui-slider .mui-slider-group .mui-slider-item img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+		width: 100%;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+		display: inline-table;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.mui-preview-loading {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+	.mui-preview-loading.mui-active {
+		display: block;
+	}
+	.mui-preview-loading .mui-spinner-white {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -25px;
+		margin-top: -25px;
+		height: 50px;
+		width: 50px;
+	}
+	.mui-preview-image img.mui-transitioning {
+		-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+		transition: transform 0.5s ease, opacity 0.5s ease;
+	}
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@-webkit-keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+</style>
 </head>
 
 <body>
 <div class="mui-content">
+
 	
-	<!--顶部banner图 开始-->
-	<div id="kr-article-banner" class="kr-article-banner">
-		<div id="kr-article-cover" class="kr-article-cover">
-			<img :src="cover">
+	<div class='mui-zoom-wrapper'>
+
+		<div class='mui-zoom-scroller'>
+		
+			<img class='mui-zoom' :src="cover" />
+		
 		</div>
-		<h2 id="kr-article-title" class="kr-article-title">{{title}}</h2>
+	
 	</div>
-	<!--顶部banner图 结束-->
+	
+		<!--<img :src="cover" data-preview-src="" data-preview-group="1" />
+		<img src="../../images/yuantiao.jpg" data-preview-src="" data-preview-group="1" />
+		<img src="../../images/muwu.jpg" data-preview-src="" data-preview-group="1" />
+		<img src="../../images/shuijiao.jpg" data-preview-src="" data-preview-group="1" />
+		-->
 	
 	
 	
-	
-	<div class="kr-article-content">
-		<!-- 文章作者、发布时间等信息 -->
-		<div class="kr-article-meta">
-			<div id="kr-article-author" class="kr-article-author">{{author}}</div>
-			<div class="kr-article-text">发表于</div>
-			<div id="kr-article-time" class="kr-article-time">{{time}}</div>
-			
-		</div>
-		<!--文章详细内容-->
-		<div id="kr-article-article" class="kr-article-article" v-html="content">{{listen_url}}</div>
-	</div>
 </div>
 
 <style>
@@ -80,8 +179,12 @@
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
-	mui.init();
-
+	mui.init({
+		gestureConfig: {
+			pinch: true,
+			doubletap: true
+		}
+	});
 	//测试用，删除缓存音频start
 //	var gentry=null
 //	plus.io.resolveLocalFileSystemURL('_downloads/', function(entry){
@@ -117,7 +220,7 @@
 			stopPlay();
 			startPlay();
 		});
-		
+		mui('.mui-zoom-wrapper').zoom();
 	}
 	
 	
@@ -230,8 +333,6 @@ function startPlay(){
         console.log("startplay检查音频存在,直接设置=" + relativePath);
         ep.style.display = 'block';
 		startplay.style.display = 'none';
-		//mui("#demo1").progressbar({progress:0}).show();
-	
 		p = plus.audio.createPlayer(playUrl);
 		p.play(function(){
 			// 播放完成
@@ -241,34 +342,14 @@ function startPlay(){
 		});
     }, function(e) {
         console.log("startplay音频下载中=" + relativePath);
-        //如果文件不存在,联网下载音频
         
     });
     
-	// 获取总时长
-//	var d = p.getDuration();
-//	
-//	pi = setInterval(function(){
-//		if(!d){ // 兼容无法及时获取总时长的情况
-//			d = p.getDuration();
-//		}
-//		var c = p.getPosition();
-//		if(!c){  // 兼容无法及时获取当前播放位置的情况
-//			return;
-//		}
-//		var pct = Math.round(c/d*100,2);
-//		mui("#demo1").progressbar().setProgress(pct);
-//	}, 1000);
 }
 // 停止播放
 function stopPlay(){
-	//clearInterval(pi);
-	//mui("#demo1").progressbar().setProgress(100);
-	//mui("#demo1").progressbar().hide();
-	//setTimeout(resetPlay, 500);
-		console.log('19191919');
+	console.log('19191919');
 	resetPlay();
-	// 操作播放对象
 	if(p){
 		p.stop();
 		p=null;
@@ -293,6 +374,7 @@ window.back=resetback;
 </script>
 
 
+<script src="../../js/mui.zoom.js"></script>
 
 
 </body>

@@ -8,7 +8,6 @@
 <link href="../../css/list-to-detail.css" rel="stylesheet" />
 <link href="../../css/style.css" rel="stylesheet" />
 <style type="text/css">
-	
 	.mui-zoom-scroller {
 		position: absolute;
 		display: -webkit-box;
@@ -33,46 +32,7 @@
 		-webkit-transform-style: preserve-3d;
 		transform-style: preserve-3d;
 	}
-	.mui-slider .mui-slider-group .mui-slider-item img {
-		width: auto;
-		height: auto;
-		max-width: 100%;
-		max-height: 100%;
-	}
-	.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
-		width: 100%;
-	}
-	.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
-		display: inline-table;
-	}
-	.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
-		display: table-cell;
-		vertical-align: middle;
-	}
-	.mui-preview-loading {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-		display: none;
-	}
-	.mui-preview-loading.mui-active {
-		display: block;
-	}
-	.mui-preview-loading .mui-spinner-white {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin-left: -25px;
-		margin-top: -25px;
-		height: 50px;
-		width: 50px;
-	}
-	.mui-preview-image img.mui-transitioning {
-		-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
-		transition: transform 0.5s ease, opacity 0.5s ease;
-	}
+	
 	@-webkit-keyframes fadeIn {
 		0% {
 			opacity: 0;
@@ -115,25 +75,15 @@
 <body>
 <div class="mui-content">
 
-	
 	<div class='mui-zoom-wrapper'>
 
 		<div class='mui-zoom-scroller'>
 		
 			<img class='mui-zoom' :src="cover" />
-		
 		</div>
 	
 	</div>
-	
-		<!--<img :src="cover" data-preview-src="" data-preview-group="1" />
-		<img src="../../images/yuantiao.jpg" data-preview-src="" data-preview-group="1" />
-		<img src="../../images/muwu.jpg" data-preview-src="" data-preview-group="1" />
-		<img src="../../images/shuijiao.jpg" data-preview-src="" data-preview-group="1" />
-		-->
-	
-	
-	
+
 </div>
 
 <style>
@@ -141,8 +91,10 @@
 	display: block;
 	position: fixed;
 	width: 100%;
-	height: 60px;
+	height: 80px;
 	bottom: 0;
+	
+	background: rgba(0, 0, 0, 0.3); 
 }
 #myplayer {
 	display: none;
@@ -153,6 +105,7 @@
 #stop,#play {
 	width: 50px;
 	margin: 0 auto;
+	padding: 12px 0 0;
 }
 .icon-play {
 	display: block;
@@ -288,14 +241,18 @@
 		}, 300);
 	};
 	
-	document.addEventListener("swiperight",function(){
-	    mui.back();
+	//右滑手势关闭页面
+//	document.addEventListener("swiperight",function(){
+//	    mui.back();
+//	    stopPlay();
+//	});
+	plus.key.addEventListener("backbutton",function(){
 	    stopPlay();
 	});
 </script>
 
 <script type="text/javascript" src="../../js/download.audio.js"></script>
-<script type="text/javascript" src="../../js/common.js"></script>
+
 <script type="text/javascript">
 // 播放文件相关对象
 var p=null,pt=null,pp=null,ps=null,pi=null;
@@ -348,7 +305,7 @@ function startPlay(){
 }
 // 停止播放
 function stopPlay(){
-	console.log('19191919');
+	console.log('停止播放————————————');
 	resetPlay();
 	if(p){
 		p.stop();
@@ -360,17 +317,7 @@ function resetPlay(){
 	ep.style.display = 'none';
 	startplay.style.display = 'block';
 }
-// 重写关闭
-var _back=window.back;
-function resetback(){
-	// 停止播放
-	if(ep.style.display == 'block'){
-		stopPlay();
-	}else{
-		//_back() = mui.back();
-	}
-}
-window.back=resetback;
+
 </script>
 
 

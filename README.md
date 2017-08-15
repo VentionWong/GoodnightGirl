@@ -1,4 +1,4 @@
 # GoodnightGirl
-Plan：
-* how to autoplay girldetail.html
-* left and right swipe to next page.
+Next Plan：
+* 增加送晚安给TA功能，可设置定时发送（通过个推），可以通过微信分享。
+* 可以匿名送祝福、骂人.————要是对方没有安装APP怎么通知？

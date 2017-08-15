@@ -9,20 +9,25 @@
 </head>
 <body>
 <header class="mui-bar mui-bar-nav">
+    <a class="mui-icon mui-icon-bars mui-pull-left" id="filePage"></a>
     <h1 class="mui-title">Goodnight Girl</h1>
     <a class="mui-icon mui-icon-gear mui-pull-right" id="settingPage"></a>
 </header>
 <nav class="mui-bar mui-bar-tab">
     <a class="mui-tab-item mui-active" href="html/home.html">
         <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item" href="html/girllist.html">
+        <span class="mui-icon mui-icon-star"></span>
         <span class="mui-tab-label">选秀</span>
     </a>
     <a class="mui-tab-item" href="html/user.html">
-        <span class="mui-icon mui-icon-phone"></span>
+        <span class="mui-icon mui-icon-flag"></span>
         <span class="mui-tab-label">翻牌</span>
     </a>
     <a class="mui-tab-item" href="html/sleep.html">
-        <span class="mui-icon mui-icon-email"></span>
+        <span class="mui-icon mui-icon-pengyouquan"></span>
         <span class="mui-tab-label">奇闻</span>
     </a>
 </nav>
@@ -34,13 +39,13 @@
   	//设置默认打开首页显示的子页序号；
 	var Index=0;
 	//把子页的路径写在数组里面
-	var subpages = ['html/home.html','html/user.html','html/sleep.html'];
+	var subpages = ['html/home.html','html/girllist.html','html/user.html','html/sleep.html'];
 
 	//所有的plus-*方法写在mui.plusReady中或者后面。
 	mui.plusReady(function() {
 		//获取当前页面所属的Webview窗口对象
 		var self = plus.webview.currentWebview();
-		for (var i = 0; i < 3; i++) {
+		for (var i = 0; i < 4; i++) {
 			//创建webview子页
 			var sub = plus.webview.create(
 				subpages[i], //子页url
@@ -57,6 +62,14 @@
 			//将webview对象填充到窗口
 			self.append(sub);
 		}
+		
+		document.getElementById('filePage').addEventListener('tap', function() {
+			//打开setting页面
+			mui.openWindow({
+				url: 'html/file.html', 
+				id:'file.html'
+			});
+		});
 		
 		document.getElementById('settingPage').addEventListener('tap', function() {
 			//打开setting页面

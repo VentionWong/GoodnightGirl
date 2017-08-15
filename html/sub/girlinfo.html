@@ -79,7 +79,7 @@
 
 		<div class='mui-zoom-scroller'>
 		
-			<img class='mui-zoom' :src="cover" />
+			<img id="imgcover" class='mui-zoom' :src="cover" />
 		</div>
 	
 	</div>
@@ -132,7 +132,7 @@
 </style>
 
 <div id="player">
-	<div id="shang"><span class="icon-shang"></span></div>
+	<div id="shang" onclick="savePicture();"><span class="icon-shang"></span></div>
 	<div id="play" onclick="startPlay();"><span class="icon-play"></span></div>
 	<div id="stop" onclick="stopPlay();"><span class="icon-pause"></span></div>
 </div>
@@ -144,6 +144,7 @@
 	mui.init({
 		gestureConfig: {
 			pinch: true,
+			longtap: true,
 			doubletap: true
 		}
 	});
@@ -171,6 +172,7 @@
 	// 扩展API加载完毕，现在可以正常调用扩展API 
 	
 	var myplayer = document.getElementById("myplayer");
+	var zzz = document.getElementById("imgcover");
 	function onPlusReady() {
 		
 //		mui('#audioList').on('click', 'li', function(){
@@ -182,6 +184,11 @@
 			stopPlay();
 			startPlay();
 		});
+		
+		document.getElementById("imgcover").addEventListener("longtap",function (){
+			showActionSheet();
+		});
+		
 		mui('.mui-zoom-wrapper').zoom();
 	}
 	
@@ -327,6 +334,38 @@ function resetPlay(){
 	startplay.style.display = 'block';
 }
 
+
+
+
+// 保存图片到相册中 
+function savePicture() {
+	var imgUrl = vm.cover;
+	var filename = imgUrl.substring(imgUrl.lastIndexOf("/") + 1, imgUrl.length);
+    var relativePath = "_doc/" + filename;
+	var dtask = plus.downloader.createDownload(imgUrl, {filename:relativePath}, function(d, status) {
+        if (status == 200) {
+            plus.gallery.save( relativePath, function () {
+				mui.toast( "图片保存成功" );
+			} );
+        } else {
+            console.log("图片下载失败=" + status+"=="+relativePath);
+            if (relativePath!=null)
+                delFile(relativePath);
+        }
+    });
+    dtask.start();
+	
+}
+function showActionSheet(){
+	var bts=[{title:"下载图片"}];
+	plus.nativeUI.actionSheet({cancel:"取消",buttons:bts},
+		function(e){
+			if(e.index == 1){
+				savePicture();
+			}
+		}
+	);
+}
 </script>
 
 

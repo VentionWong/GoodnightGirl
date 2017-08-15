@@ -6,111 +6,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 <link href="../css/mui.min.css" rel="stylesheet" />
 <link href="../css/style.css" rel="stylesheet"/>
-<style>
-.mui-content{
-	padding: 0;
-	margin: 0;
-}
-.bg {
-	width: 100%;
-	padding: 30px 0 0;
-}
-/*#homewrap {
-	width: 100%;
-	height: auto;
-	margin: 0px auto;
-	padding: 280px 0;
-	background: #222;
-}*/
-#showGirl {
-	width: 100%;
-	height: 90px;
-	margin: 0 auto;
-	text-align: center;
-	position: fixed;
-	bottom: 44px;
-}
-
-.rp {
-	width: 100%;
-	height: 100%;
-	display: none;
-	text-align: center;
-	position: fixed;
-	top: 0;
-	z-index: 9999;
-	overflow: hidden;
-}
-.rprogress {
-	background: url(../images/arecord.png) no-repeat center center;
-	background-size: 32px 32px;
-}
-.rschedule {
-    background-color: rgba(0,0,0,0);
-    border: 5px solid rgba(0,183,229,0.9);
-    opacity: .9;
-    border-left: 5px solid rgba(0,0,0,0);
-    border-right: 5px solid rgba(0,0,0,0);
-    border-radius: 50px;
-    box-shadow: 0 0 15px #2187e7;
-    width: 36px;
-    height: 36px;
-    margin: 0 auto;
-    -webkit-animation: spin 1s infinite linear;
-    animation: spin 1s infinite linear;
-}
-@-webkit-keyframes spin {
-    0% {
-        -webkit-transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
-}
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-</style>
 </head>
+
 <body>
+
+
 <div class="mui-content" id="news">
-	<img class="bg" src="../images/homebg.png" />
-	<div id="homewrap" class="vertical">
-		<div id="showGirl">
-			<button id="saySth" type="button" class="mui-btn mui-btn-primary">长按说出下面这句话</button>
-			<p></p>
-			<p>来个女神跟我说晚安</p>
-		</div>
-	</div>
-	
-	<div id="record" class="rp">
-		<div style="width:100%;height:20%;"></div>
-		<div class="rprogress"><div class="rschedule"></div></div>
-	</div>
+	<!--<div class="mui-segmented-control">
+	    <a class="mui-control-item mui-active" href="#item1">真人录制</a>
+	    <a class="mui-control-item" href="#item2">视频截取</a>
+	</div>-->
 	
     <!--列表信息流 开始-->
-	<div id="list" style="display: none;">
-		
-			<a id="zzz" href="javascript:;" :data-guid="items.guid">
+	<div id="list">
+		<div v-for="item in items">
+			<a href="javascript:;" :data-guid="item.guid">
 				<div class="mui-card">
 					<div class="mui-card-content">
-						<img :src="items.cover" />
+						<img :src="item.cover" />
 					</div>
 					<div class="mui-card-footer">
 						<div class="mui-media-body">
 							
-								<span class="mui-icon mui-icon-mic playaudio" style="display: none;">{{items.listen_url}}</span>
+								<span class="mui-icon mui-icon-mic playaudio" style="display: none;">{{item.listen_url}}</span>
 							
-								<h4 class="mui-pull-left mui-ellipsis-2">{{items.title}}</h4>
+								<h4 class="mui-pull-left mui-ellipsis-2">{{item.title}}</h4>
 								<p>
-									<span class="mui-badge mui-badge-primary author">{{items.author}}</span>
-									<span class="mui-badge mui-badge-danger time">{{items.time}}</span>
+									<span class="mui-badge mui-badge-primary author">{{item.author}}</span>
+									<span class="mui-badge mui-badge-danger time">{{item.time}}</span>
 								</p>
 								<!--<p>
 									<h5>我的个性签名在这里</h5>
@@ -121,11 +44,29 @@
 					</div>
 				</div>
 			</a>
-		
+		</div>
 	</div>
 	<!--列表信息流 结束-->
 </div>
 
+
+<style>
+#audioRecorder {
+	display: block;
+	position: fixed;
+	width: 100%;
+	height: 60px;
+	bottom: 0px;
+	z-index: 99;
+}
+#audioRecord {
+	width: 50px;
+	margin: 0 auto;
+}
+</style>
+<div id="audioRecorder">
+	<div id="audioRecord"><span class="mui-icon mui-icon-mic"></span></div>
+</div>
 
 <script src="../js/mui.min.js"></script>
 <script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
@@ -142,40 +83,49 @@
 			color: '#fff'
 		}
 	}
-	
-	function getData() {
-		if(window.plus && plus.networkinfo.getCurrentType() === plus.networkinfo.CONNECTION_NONE) {
-			plus.nativeUI.toast('似乎已断开与互联网的连接', {
-				verticalAlign: 'top'
-			});
-			return;
-		}
-
-		var data = {
-			column: "id,name,up_uname,cover_url,update_time,listen_url" //需要的字段名
-		}
-
-		
-		mui.getJSON("http://www.zlhpy.com/musicapi.php?", data, function(rsp) {
-			if(rsp && rsp.length > 0) {
-				var rspIndex = Math.floor((Math.random()*rsp.length)); 
-				rsp2 = convert(rsp);
-				news.items = rsp2[rspIndex];
-			}
-		});
-	}
 
 	//mui初始化，配置下拉刷新
 	mui.init({
-		gestureConfig: {
-			longtap: true,
-			hold:true,
-			release:true
+		pullRefresh: {
+			container: '#list',
+			down: {
+				style: 'circle',
+				offset: '0px',
+				auto: true,
+				callback: function() {
+					if(window.plus && plus.networkinfo.getCurrentType() === plus.networkinfo.CONNECTION_NONE) {
+						plus.nativeUI.toast('似乎已断开与互联网的连接', {
+							verticalAlign: 'top'
+						});
+						return;
+					}
+
+					var data = {
+						column: "id,name,up_uname,cover_url,update_time,listen_url" //需要的字段名
+					}
+
+					if(lastId) { //说明已有数据，目前处于下拉刷新，增加时间戳，触发服务端立即刷新，返回最新数据
+						data.lastId = lastId;
+						data.time = new Date().getTime() + "";
+						mui.toast("刷新完毕");
+					}
+					
+
+					//请求列表信息流,要在PHP进行判断data传过去的lastID
+					mui.getJSON("http://www.zlhpy.com/musicapi.php?", data, function(rsp) {
+						mui('#list').pullRefresh().endPulldown();
+						if(rsp && rsp.length > 0) {
+							lastId = rsp[0].id; //保存最新消息的id，方便下拉刷新时使用
+							//news.items = news.items.concat(convert(rsp));
+							news.items = convert(rsp).concat(news.items);
+						}
+					});
+				}
+			}
 		}
 	});
 
 	mui.plusReady(function() {
-		getData();
 		//预加载详情页
 		webview_detail = mui.preload({
 			url: 'sub/girlinfo.html',
@@ -190,34 +140,20 @@
 		});
 		
 		
-		document.getElementById('saySth').addEventListener('hold', function(){
-			document.getElementById('record').style.display = 'block';
-			getData();
+		document.getElementById("audioRecord").addEventListener('tap', function(){
+			//打开关于页面
+			  mui.openWindow({
+			    url: 'audio.html', 
+			    id:'audioplayer'
+			  });
+			  console.log("当前页面URL："+plus.webview.currentWebview().getURL());
 		});
-		
-		document.getElementById('saySth').addEventListener('release', function(){
-			var zzz = document.getElementById('zzz');
-			var guid = zzz.getAttribute('data-guid');
-			var title = zzz.querySelector(".mui-ellipsis-2").innerHTML.trim();
-			var author = zzz.querySelector(".author").innerHTML;
-			var time = zzz.querySelector(".time").innerHTML;
-			var listen_url = zzz.querySelector(".playaudio").innerHTML;
-			var cover = zzz.querySelector("img").getAttribute("src");
-			open_detail(guid, title,author,time,cover,listen_url);
-			document.getElementById('record').style.display = 'none';
-		});
-		
 	});
-	
-	
-	
-	
-	
 
 	var news = new Vue({
 		el: '#news',
 		data: {
-			items: {} //列表信息流数据
+			items: [] //列表信息流数据
 		}
 	});
 
@@ -262,7 +198,7 @@
 			"titleNView": titleNView
 		});
 		setTimeout(function () {
-			webview_detail.show("fade-in", 300);
+			webview_detail.show("slide-in-right", 300);
 		},150);
 	}
 
